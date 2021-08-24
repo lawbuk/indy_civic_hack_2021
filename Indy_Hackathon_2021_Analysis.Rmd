@@ -1,0 +1,53 @@
+---
+title: " Indy Civic Hack 2021"
+author: "Lawrence Bukenya", "Todd Albin"
+date: 'Last edited: `r Sys.Date()`'
+output: html_notebook
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE,
+                      fig.height = 4, fig.width = 8,tidy = TRUE)
+
+rm(list=ls()) # Clear R's memory
+#setwd("D:/Indy_Hackathon") # Set the working directory
+```
+
+```{r package, message=FALSE, warning=FALSE, echo = TRUE}
+
+library(knitr)
+library(DT)
+library(lubridate)
+library(readxl)
+
+if(!require(shiny)) {install.packages("shiny"); require(shiny)}
+
+if(!require(tidyverse)) {install.packages("tidyverse"); require(tidyverse)}
+
+if(!require(ggmap)) {install.packages("ggmap"); require(ggmap)}
+
+if(!require(RCurl)) {install.packages("RCurl"); require(RCurl)}
+```
+
+```{r data, eval=FALSE}
+#Reading from Github account
+Indy_Hack_21 <- as_tibble(read.csv("https://raw.githubusercontent.com/lawbuk/indy_civic_hack_2021/main/Indy_Hackathon_2021.csv", sep = ",", na.strings = "NA",strip.white = TRUE, stringsAsFactors = FALSE))
+
+#summary(Indy_Hack_21)
+
+```
+```{r service_map}
+
+#qmplot(Longitude, Latitude, data = total, colour = I('blue'), size = I(3))+theme(legend.position = "none")
+
+theme_set(theme_bw())
+qmplot(x=Longitude, y=Latitude, data = Indy_Hack_21, colour = Service, size = I(5), alpha = I(.5),label = "Provider")+
+  theme(legend.position = "bottom")
+
+data_indy <- total%>%
+  filter(City == "Indianapolis")
+
+qmplot(x=Longitude, y=Latitude, data = data_indy, colour = Service, size = I(5),label = "Provider", legend = "bottomleft")#+ facet_wrap(~ Service.Type)
+
+
+```
